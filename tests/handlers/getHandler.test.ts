@@ -3,6 +3,7 @@ import { AI21Handler } from '../../src/handlers/ai21';
 import { AnthropicHandler } from '../../src/handlers/anthropic';
 import { CohereHandler } from '../../src/handlers/cohere';
 import { DeepInfraHandler } from '../../src/handlers/deepinfra';
+import { GeminiHandler } from '../../src/handlers/gemini';
 import { getHandler } from '../../src/handlers/getHandler';
 import { MistralHandler } from '../../src/handlers/mistral';
 import { OllamaHandler } from '../../src/handlers/ollama';
@@ -26,6 +27,9 @@ describe('getHandler', () => {
     { model: 'replicate/test/test', expectedHandler: ReplicateHandler },
     { model: 'deepinfra/test/test', expectedHandler: DeepInfraHandler },
     { model: 'mistral/mistral-tiny', expectedHandler: MistralHandler },
+    { model: 'gemini/gemini-1.5-flash-latest', expectedHandler: GeminiHandler },
+    { model: 'gemini/gemini-1.5-pro-latest', expectedHandler: GeminiHandler },
+    { model: 'gemini/gemini-1.0-pro', expectedHandler: GeminiHandler },
     { model: 'unknown', expectedHandler: null },
   ])(
     'should return the correct handler for a given model name',
