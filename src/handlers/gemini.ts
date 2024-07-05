@@ -71,8 +71,19 @@ export async function GeminiHandler(
   const genAI = new GoogleGenerativeAI(apiKey);
   const model = genAI.getGenerativeModel({ model: params.model });
 
+  // if there's a "system" prompt in the messages, use it as the system instruction
+  const systemInstruction = completionsParams.messages.find(
+    (msg) => msg.role === 'system',
+  )?.content;
+
+  // remove the "system" prompt from the messages
+  const messages = completionsParams.messages.filter(
+    (msg) => msg.role !== 'system',
+  );
+
   const chat = model.startChat({
-    history: completionsParams.messages.slice(0, -1).map((msg) => ({
+    systemInstruction: systemInstruction ?? undefined,
+    history: messages.slice(0, -1).map((msg) => ({
       role: msg.role,
       parts: [{ text: msg.content ?? '' }],
     })),
