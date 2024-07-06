@@ -83,21 +83,6 @@ export async function GeminiHandler(
     systemInstruction: systemInstruction ?? undefined,
   });
 
-  // if there's a "system" prompt in the messages, use it as the system instruction
-
-  console.log({
-    systemInstruction: systemInstruction ?? undefined,
-    history: messages.slice(0, -1).map((msg) => ({
-      role: msg.role,
-      parts: [{ text: msg.content ?? '' }],
-    })),
-    generationConfig: {
-      temperature: completionsParams.temperature ?? undefined,
-      topP: completionsParams.top_p ?? undefined,
-      maxOutputTokens: completionsParams.max_tokens ?? undefined,
-    },
-  });
-
   const chat = model.startChat({
     history: messages.slice(0, -1).map((msg) => ({
       role: msg.role,
