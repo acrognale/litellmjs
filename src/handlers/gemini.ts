@@ -68,10 +68,6 @@ export async function GeminiHandler(
     throw new Error('No API key provided');
   }
 
-  const genAI = new GoogleGenerativeAI(apiKey);
-  const model = genAI.getGenerativeModel({ model: params.model });
-
-  // if there's a "system" prompt in the messages, use it as the system instruction
   const systemInstruction = completionsParams.messages.find(
     (msg) => msg.role === 'system',
   )?.content;
@@ -81,8 +77,28 @@ export async function GeminiHandler(
     (msg) => msg.role !== 'system',
   );
 
-  const chat = model.startChat({
+  const genAI = new GoogleGenerativeAI(apiKey);
+  const model = genAI.getGenerativeModel({
+    model: params.model,
     systemInstruction: systemInstruction ?? undefined,
+  });
+
+  // if there's a "system" prompt in the messages, use it as the system instruction
+
+  console.log({
+    systemInstruction: systemInstruction ?? undefined,
+    history: messages.slice(0, -1).map((msg) => ({
+      role: msg.role,
+      parts: [{ text: msg.content ?? '' }],
+    })),
+    generationConfig: {
+      temperature: completionsParams.temperature ?? undefined,
+      topP: completionsParams.top_p ?? undefined,
+      maxOutputTokens: completionsParams.max_tokens ?? undefined,
+    },
+  });
+
+  const chat = model.startChat({
     history: messages.slice(0, -1).map((msg) => ({
       role: msg.role,
       parts: [{ text: msg.content ?? '' }],
